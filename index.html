@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サバイバルゲーム - Web Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ゲーム画面 -->
+        <div class="game-area">
+            <canvas id="gameCanvas" width="600" height="600"></canvas>
+            <div id="startScreen" class="overlay">
+                <h1>サバイバルゲーム</h1>
+                <p>3分間、矢印と障害物をよけ続けろ！</p>
+                <button id="startBtn">GAME START</button>
+            </div>
+            <div id="resultScreen" class="overlay hidden">
+                <h1 id="resultText"></h1>
+                <button id="retryBtn">もう一度プレイ</button>
+            </div>
+        </div>
+
+        <!-- サイドバー（説明・クレジット） -->
+        <div class="info-area">
+            <h2>操作方法</h2>
+            <ul>
+                <li><strong>前進:</strong> 上矢印キー（↑）</li>
+                <li><strong>後退:</strong> 下矢印キー（↓）</li>
+                <li><strong>右回転:</strong> 右矢印キー（→）</li>
+                <li><strong>左回転:</strong> 左矢印キー（←）</li>
+            </ul>
+            <p class="note">※障害物に衝突した際は、障害物から30度以上背を向けないと移動できません。</p>
+
+            <h2>クレジット（素材提供）</h2>
+            <ul class="credits">
+                <li><strong>BGM / 効果音:<br> </strong>
+
+                ゲーム中BGM<br>
+                <a href="https://musekinote.com">ムセキノオト様 </a><br>
+
+                操作音<br>
+                <a href="https://soundeffect-lab.info/">効果音ラボ様</a><br>
+
+                勝利BGM<br>
+                <a href="https://maou.audio/">魔王魂様</a><br>
+
+                敗北BGM<br>
+                <a href="https://dova-s.jp/">DOVA-SYNDROME様</a></li>
+
+                <li><strong>プレイヤーアイコン:<br> </strong>
+                <a href="https://dot-illust.net/character_yusha_01_red/">DOT ILLUST様</a><br></li>
+
+                <li><strong>開発:</strong> まどれーぬさん</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 音声データの事前読み込み -->
+    <audio id="bgm0" src="BGM/BGM0.mp3" loop></audio>
+    <audio id="bgm1" src="BGM/BGM1.mp3"></audio>
+    <audio id="bgm2" src="BGM/BGM2.mp3"></audio>
+    <audio id="bgm3" src="BGM/BGM3.mp3"></audio>
+
+    <script src="game.js"></script>
+</body>
+</html>
