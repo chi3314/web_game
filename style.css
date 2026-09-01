@@ -82,3 +82,17 @@ button:hover { background-color: #008ba3; }
     font-size: 14px;
     margin-bottom: 8px;
 }
+
+/* ★追加：残機表示のデザイン */
+.lives-display {
+    margin-top: 30px;
+    padding: 15px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #ff5722; /* 目立つオレンジ・赤系 */
+    text-align: center;
+    background-color: #2a1010;
+    border: 3px dashed #ff5722;
+    border-radius: 8px;
+    letter-spacing: 2px;
+}
