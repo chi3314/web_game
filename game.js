@@ -6,6 +6,7 @@ const bgm0 = document.getElementById('bgm0');
 const bgm1 = document.getElementById('bgm1');
 const bgm2 = document.getElementById('bgm2');
 const bgm3 = document.getElementById('bgm3');
+const livesDisplay = document.getElementById('livesDisplay'); // 残機表示用の要素を取得
 
 // 効果音は連続再生できるようクローン関数を作成
 function playMoveSound() {
@@ -33,6 +34,7 @@ let startTime, lastArrowTime;
 let obstacles = [];
 let arrows = [];
 let keys = {};
+let lives = 3; // 残機
 
 let player = {
     x: SCREEN_WIDTH / 2,
@@ -145,13 +147,11 @@ function updatePlayer() {
         moved = true;
     }
 
-    // 移動音 (間隔を間引く)
     if (moved && Math.random() < 0.1) playMoveSound();
 
     if (player.isCollided && (dx !== 0 || dy !== 0)) {
         const angleToObstacle = Math.atan2(player.collidedObstacle.y - player.y, player.collidedObstacle.x - player.x);
         let angleDiff = Math.abs(player.angle - angleToObstacle);
-        // 角度差を0〜πの範囲に正規化
         while (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
         
         if (keys['ArrowUp'] && angleDiff <= ESCAPE_ANGLE_RAD) { dx = 0; dy = 0; }
@@ -176,19 +176,16 @@ function gameLoop() {
     const elapsed = Math.floor((now - startTime) / 1000);
     const remaining = TIME_LIMIT - elapsed;
 
-    // 勝利判定
     if (remaining <= 0) {
         endGame("GAME CLEAR!!", bgm2);
         return;
     }
 
-    // 矢印の発射 (1.5秒間隔)
     if (now - lastArrowTime > 1500) {
         shootArrow();
         lastArrowTime = now;
     }
 
-    // 描画クリア
     ctx.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     drawObstacles();
@@ -205,7 +202,7 @@ function gameLoop() {
         }
     }
 
-    // 矢印の更新と当たり判定
+    // ★ 矢印の更新と当たり判定 (残機処理に対応)
     for (let i = arrows.length - 1; i >= 0; i--) {
         let a = arrows[i];
         a.x += Math.cos(a.angle) * ARROW_SPEED;
@@ -213,8 +210,15 @@ function gameLoop() {
 
         // プレイヤーとの衝突判定
         if (Math.hypot(player.x - a.x, player.y - a.y) < 15) {
-            endGame("GAME OVER", bgm3);
-            return;
+            arrows.splice(i, 1); // 当たった矢印は消す（連続ダメージ防止）
+            lives--; // 残機を減らす
+            livesDisplay.textContent = `残機: ${lives}`; // 表示を更新
+            
+            if (lives <= 0) {
+                endGame("GAME OVER", bgm3);
+                return;
+            }
+            continue; // 矢印を消したので画面外判定はスキップ
         }
 
         // 画面外削除
@@ -251,6 +255,10 @@ function startGame() {
     arrows = [];
     keys = {};
     setupObstacles();
+
+    // ★ ゲーム開始時に残機と表示をリセット
+    lives = 3;
+    livesDisplay.textContent = `残機: ${lives}`;
 
     startTime = Date.now();
     lastArrowTime = startTime;
